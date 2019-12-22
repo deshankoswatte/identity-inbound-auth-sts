@@ -45,29 +45,11 @@
                     <artifactId>commons-collections</artifactId>
                     <groupId>commons-collections</groupId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.opensaml</groupId>
-                    <artifactId>opensaml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.opensaml</groupId>
-                    <artifactId>opensaml1</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.security.mgt</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.opensaml</groupId>
-                    <artifactId>opensaml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.opensaml</groupId>
-                    <artifactId>opensaml1</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>

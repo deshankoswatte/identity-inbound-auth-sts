@@ -133,11 +133,47 @@
                 <groupId>org.apache.ws.security.wso2</groupId>
                 <artifactId>wss4j</artifactId>
                 <version>${wss4j.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>opensaml</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>opensaml1</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>xmltooling</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>openws</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.rampart.wso2</groupId>
                 <artifactId>rampart-trust</artifactId>
                 <version>${rampart.wso2.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>opensaml</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>opensaml1</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>xmltooling</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opensaml</groupId>
+                        <artifactId>openws</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.rampart.wso2</groupId>
@@ -436,7 +472,7 @@
     </build>
 
     <properties>
-        <identity.framework.version>5.15.0</identity.framework.version>
+        <identity.framework.version>5.15.62</identity.framework.version>
         <identity.inbound.auth.sts.package.export.version>${project.version}
         </identity.inbound.auth.sts.package.export.version>
         <inbound.auth.openid.version>5.4.0</inbound.auth.openid.version>
@@ -444,8 +480,8 @@
         <carbon.kernel.version>4.5.0</carbon.kernel.version>
         <carbon.kernel.feature.version>4.5.0</carbon.kernel.feature.version>
         <carbon.xfer.package.version>4.2.0</carbon.xfer.package.version>
-        <wss4j.version>1.5.11.wso2v16</wss4j.version>
-        <rampart.wso2.version>1.6.1-wso2v36</rampart.wso2.version>
+        <wss4j.version>1.5.11-wso2v19</wss4j.version>
+        <rampart.wso2.version>1.6.1-wso2v42</rampart.wso2.version>
         <opensaml2.wso2.version>3.3.1.wso2v1</opensaml2.wso2.version>
         <commons-fileupload.wso2.version>1.2.2.wso2v1</commons-fileupload.wso2.version>
         <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
