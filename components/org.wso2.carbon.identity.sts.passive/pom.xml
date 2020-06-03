@@ -189,6 +189,7 @@
 
                             org.wso2.carbon.context; version="${carbon.kernel.package.import.version.range}",
                             org.wso2.carbon.core.util; version="${carbon.kernel.package.import.version.range}",
+                            org.wso2.carbon.user.core.claim;version="${carbon.kernel.package.import.version.range}",
                             org.wso2.carbon.user.core.service;version="${carbon.kernel.package.import.version.range}",
                             org.wso2.carbon.user.core.tenant;version="${carbon.kernel.package.import.version.range}",
                             org.wso2.carbon.user.api; version="${carbon.user.api.imp.pkg.version.range}",
@@ -214,6 +215,8 @@
                             org.wso2.carbon.identity.core.*;
                             version="${identity.framework.imp.pkg.version.range}",
                             org.wso2.carbon.identity.application.authentication.framework.*;
+                            version="${identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.base.*;
                             version="${identity.framework.imp.pkg.version.range}",
                             <!--org.apache.xml.security.*; version="${xmlsec.version.imp.pkg.version.range}",-->
                         </Import-Package>

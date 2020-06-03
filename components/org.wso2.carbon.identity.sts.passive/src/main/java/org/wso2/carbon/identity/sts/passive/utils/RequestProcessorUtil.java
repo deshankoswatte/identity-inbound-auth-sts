@@ -35,6 +35,7 @@ import org.apache.cxf.sts.token.provider.DefaultConditionsProvider;
 import org.apache.cxf.sts.token.provider.DefaultSubjectProvider;
 import org.apache.cxf.sts.token.provider.SAMLTokenProvider;
 import org.apache.cxf.sts.token.provider.TokenProvider;
+import org.apache.cxf.ws.security.sts.provider.STSException;
 import org.apache.cxf.ws.security.sts.provider.model.RequestSecurityTokenResponseCollectionType;
 import org.apache.cxf.ws.security.sts.provider.model.RequestSecurityTokenType;
 import org.apache.wss4j.common.WSS4JConstants;
@@ -52,6 +53,9 @@ import org.wso2.carbon.identity.application.common.model.Property;
 import org.wso2.carbon.identity.application.common.util.IdentityApplicationConstants;
 import org.wso2.carbon.identity.application.common.util.IdentityApplicationManagementUtil;
 import org.wso2.carbon.identity.base.IdentityConstants;
+import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.core.IdentityClaimManager;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.sts.passive.RequestToken;
 import org.wso2.carbon.identity.sts.passive.custom.handler.CustomClaimsHandler;
@@ -59,6 +63,8 @@ import org.wso2.carbon.identity.sts.passive.custom.handler.PasswordCallbackHandl
 import org.wso2.carbon.identity.sts.passive.custom.provider.CustomAttributeProvider;
 import org.wso2.carbon.identity.sts.passive.custom.provider.CustomAuthenticationProvider;
 import org.wso2.carbon.idp.mgt.IdentityProviderManager;
+import org.wso2.carbon.user.core.UserCoreConstants;
+import org.wso2.carbon.user.core.claim.Claim;
 
 import java.net.URI;
 import java.security.Principal;
@@ -271,17 +277,54 @@ public class RequestProcessorUtil {
      *
      * @param requestToken Request sent by the client to obtain the security token.
      * @param issueOperation The issue operation which the claim manager should be set into.
+     * @throws STSException If there is an error while loading the claims.
      */
-    public static void handleClaims(RequestToken requestToken, TokenIssueOperation issueOperation) {
+    public static void handleClaims(RequestToken requestToken, TokenIssueOperation issueOperation) throws STSException {
 
         CustomClaimsHandler customClaimsHandler = new CustomClaimsHandler();
-        CustomClaimsHandler.setKnownURIs(getClaimURIs(requestToken.getAttributes()));
-        customClaimsHandler.setClaimsKeyValuePair(getFormattedClaims(requestToken.getAttributes()));
+        loadClaims(requestToken.getDialect(), requestToken.getTenantDomain());
+        customClaimsHandler.setRequestedClaims(getFormattedClaims(requestToken.getAttributes()));
 
         ClaimsManager claimsManager = new ClaimsManager();
         claimsManager.setClaimHandlers(Collections.singletonList(customClaimsHandler));
 
         issueOperation.setClaimsManager(claimsManager);
+    }
+
+    /**
+     * This method loads claim according to the claim dialect that is defined in the request
+     *
+     * @param claimDialect Claim dialect specified in the request.
+     * @param spTenantDomain Tenant domain specified in the request.
+     * @throws STSException If there is an error while executing a process of the claims manager.
+     */
+    private static void loadClaims(String claimDialect, String spTenantDomain) throws STSException {
+
+        IdentityClaimManager claimManager;
+        Claim[] claims;
+        List<String> supportedClaimURIs = new ArrayList<>();
+
+        if (claimDialect == null || claimDialect.trim().length() == 0) {
+            claimDialect = UserCoreConstants.DEFAULT_CARBON_DIALECT;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Loading claims.");
+        }
+
+        try {
+            claimManager = IdentityClaimManager.getInstance();
+            claims =
+                    claimManager.getAllSupportedClaims(claimDialect, IdentityTenantUtil.getRealm(spTenantDomain, null));
+            for (Claim claim : claims) {
+                supportedClaimURIs.add(claim.getClaimUri());
+            }
+            // TODO - Username uri does not exist in supportedClaimURIs.
+            CustomClaimsHandler.setKnownURIs(supportedClaimURIs);
+        } catch (IdentityException e) {
+            log.error("Error while loading claims.", e);
+            throw new STSException("Error while loading claims.", e);
+        }
     }
 
     /**
