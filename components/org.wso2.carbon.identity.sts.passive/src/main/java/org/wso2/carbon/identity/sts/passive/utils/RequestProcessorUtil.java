@@ -275,7 +275,7 @@ public class RequestProcessorUtil {
     /**
      * Handles the claim related logic. For example setting the known URIs.
      *
-     * @param requestToken Request sent by the client to obtain the security token.
+     * @param requestToken   Request sent by the client to obtain the security token.
      * @param issueOperation The issue operation which the claim manager should be set into.
      * @throws STSException If there is an error while loading the claims.
      */
@@ -328,7 +328,7 @@ public class RequestProcessorUtil {
     }
 
     /**
-     * Mock up a SecondaryParameters DOM Element containing some claims.
+     * Create a SecondaryParameters DOM Element containing the required claims.
      *
      * @param requestToken Request sent by the client to obtain the security token.
      * @return Element containing the created secondary parameters.
@@ -391,7 +391,7 @@ public class RequestProcessorUtil {
     }
 
     /**
-     * Mock up an AppliesTo element using the supplied address.
+     * Create an AppliesTo element using the supplied address.
      *
      * @param addressUrl The address url or the realm in our case.
      * @return AppliesTo element which is created.
