@@ -25,13 +25,14 @@ import org.apache.cxf.sts.claims.ProcessedClaimCollection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A custom ClaimsHandler implementation to be used in the implementation.
  */
 public class CustomClaimsHandler implements ClaimsHandler {
 
-    private static List<String> knownURIs = new ArrayList<>();
+    private static HashMap<String, org.wso2.carbon.user.core.claim.Claim> supportedClaims = new HashMap<>();
     private HashMap<String, String> requestedClaims = new HashMap<>();
 
     /**
@@ -49,7 +50,7 @@ public class CustomClaimsHandler implements ClaimsHandler {
             for (Claim requestClaim : claims) {
                 ProcessedClaim claim = new ProcessedClaim();
                 claim.setClaimType(requestClaim.getClaimType());
-                if (knownURIs.contains(requestClaim.getClaimType()) &&
+                if (supportedClaims.containsKey(requestClaim.getClaimType()) &&
                         requestedClaims.containsKey(requestClaim.getClaimType())) {
                     claim.addValue(requestedClaims.get(requestClaim.getClaimType()));
                 }
@@ -62,27 +63,32 @@ public class CustomClaimsHandler implements ClaimsHandler {
     }
 
     /**
-     * Get the list of supported claim URIs.
+     * Get the supported claim URIs.
      *
      * @return List of supported claim URIs.
      */
     public List<String> getSupportedClaimTypes() {
 
-        return knownURIs;
+        List<String> supportedClaimTypes = new ArrayList<>();
+        for (Map.Entry supportedClaim : supportedClaims.entrySet()) {
+            supportedClaimTypes.add((String) supportedClaim.getKey());
+        }
+
+        return supportedClaimTypes;
     }
 
     /**
-     * Set the list of supported claim URIs.
+     * Set the supported claims.
      *
-     * @param knownURIs New list to be set as the known URIs.
+     * @param supportedClaims The new HashMap with the supported claims.
      */
-    public static void setKnownURIs(List<String> knownURIs) {
+    public static void setSupportedClaimsTypes(HashMap<String, org.wso2.carbon.user.core.claim.Claim> supportedClaims) {
 
-        CustomClaimsHandler.knownURIs = knownURIs;
+        CustomClaimsHandler.supportedClaims = supportedClaims;
     }
 
     /**
-     * Get claim URIs and values in the form of a HashMap.
+     * Get the requested claims(Contains the URI and value).
      *
      * @return HashMap containing the requested claim URIs and values.
      */
@@ -92,7 +98,7 @@ public class CustomClaimsHandler implements ClaimsHandler {
     }
 
     /**
-     * Set claim key value pair(the URI and value).
+     * Set the requested claims.
      *
      * @param requestedClaims The new HashMap with the requested claims.
      */

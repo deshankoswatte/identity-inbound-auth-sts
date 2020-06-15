@@ -294,7 +294,7 @@ public class RequestProcessorUtil {
     /**
      * This method loads claim according to the claim dialect that is defined in the request
      *
-     * @param claimDialect Claim dialect specified in the request.
+     * @param claimDialect   Claim dialect specified in the request.
      * @param spTenantDomain Tenant domain specified in the request.
      * @throws STSException If there is an error while executing a process of the claims manager.
      */
@@ -302,7 +302,7 @@ public class RequestProcessorUtil {
 
         IdentityClaimManager claimManager;
         Claim[] claims;
-        List<String> supportedClaimURIs = new ArrayList<>();
+        HashMap<String, Claim> supportedClaims = new HashMap<>();
 
         if (claimDialect == null || claimDialect.trim().length() == 0) {
             claimDialect = UserCoreConstants.DEFAULT_CARBON_DIALECT;
@@ -317,10 +317,10 @@ public class RequestProcessorUtil {
             claims =
                     claimManager.getAllSupportedClaims(claimDialect, IdentityTenantUtil.getRealm(spTenantDomain, null));
             for (Claim claim : claims) {
-                supportedClaimURIs.add(claim.getClaimUri());
+                supportedClaims.put(claim.getClaimUri(), claim);
             }
-            // TODO - Username uri does not exist in supportedClaimURIs.
-            CustomClaimsHandler.setKnownURIs(supportedClaimURIs);
+            // TODO - Username URI does not exist in supportedTypes.
+            CustomClaimsHandler.setSupportedClaimsTypes(supportedClaims);
         } catch (IdentityException e) {
             log.error("Error while loading claims.", e);
             throw new STSException("Error while loading claims.", e);
