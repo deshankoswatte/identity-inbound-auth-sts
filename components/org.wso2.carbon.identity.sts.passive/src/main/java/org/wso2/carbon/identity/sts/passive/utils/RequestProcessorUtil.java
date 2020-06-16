@@ -81,6 +81,7 @@ public class RequestProcessorUtil {
     private static final String STS_TIME_TO_LIVE_KEY = "STSTimeToLive";
     private static final String STS_SIGNATURE_ALGORITHM_KEY = "Security.STSSignatureAlgorithm";
     private static final String STS_DIGEST_ALGORITHM_KEY = "Security.STSDigestAlgorithm";
+    private static final String USERNAME_URI = "http://wso2.org/claims/username";
 
     /**
      * Sets the SAML token provider to the issue operation.
@@ -319,7 +320,16 @@ public class RequestProcessorUtil {
             for (Claim claim : claims) {
                 supportedClaims.put(claim.getClaimUri(), claim);
             }
-            // TODO - Username URI does not exist in supportedTypes.
+            // Adding username uri manually. TODO - Improve this logic.
+            if (claimDialect.equals(UserCoreConstants.DEFAULT_CARBON_DIALECT) &&
+                    !supportedClaims.containsKey(USERNAME_URI)) {
+                Claim claim = new Claim();
+                claim.setClaimUri(USERNAME_URI);
+                claim.setDialectURI("http://wso2.org/claims");
+                claim.setDisplayTag("Username");
+                claim.setDescription("Username");
+                supportedClaims.put(USERNAME_URI, null);
+            }
             CustomClaimsHandler.setSupportedClaimsTypes(supportedClaims);
         } catch (IdentityException e) {
             log.error("Error while loading claims.", e);
